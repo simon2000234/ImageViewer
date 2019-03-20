@@ -23,7 +23,7 @@
                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                      </opaqueInsets>
                   </Button>
-                  <Button mnemonicParsing="false" text="Button" />
+                  <Button fx:id="btnNext" mnemonicParsing="false" text="Next" />
                   <Button id="btnNext" mnemonicParsing="false" onAction="#handleStartSlideShow" text="Start Slideshow" />
                   <Button mnemonicParsing="false" onAction="#handleStopSlideshow" text="Stop Slideshow" />
                </buttons>
