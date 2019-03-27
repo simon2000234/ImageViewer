@@ -36,7 +36,7 @@ public class Slideshow implements Runnable
             {
                 currentImageIndex = (currentImageIndex + 1) % images.size();
                 imageView.setImage(images.get(currentImageIndex));
-                TimeUnit.SECONDS.sleep(2);
+                TimeUnit.SECONDS.sleep(4);
             }
         }
         catch (InterruptedException ex)
