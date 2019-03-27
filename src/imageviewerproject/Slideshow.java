@@ -7,6 +7,7 @@ package imageviewerproject;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import javafx.application.Platform;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
@@ -34,8 +35,11 @@ public class Slideshow implements Runnable
         {
             while (true)
             {
+                Platform.runLater(() ->
+                {
+                    imageView.setImage(images.get(currentImageIndex));
+                });
                 currentImageIndex = (currentImageIndex + 1) % images.size();
-                imageView.setImage(images.get(currentImageIndex));
                 TimeUnit.SECONDS.sleep(4);
             }
         }
@@ -45,5 +49,3 @@ public class Slideshow implements Runnable
         }
     }
 }
-
-
