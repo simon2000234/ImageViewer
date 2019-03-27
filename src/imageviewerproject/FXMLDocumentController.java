@@ -14,6 +14,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
@@ -23,6 +24,7 @@ import javafx.stage.Stage;
 public class FXMLDocumentController implements Initializable
 {
     private final List<Image> images = new ArrayList<>();
+    private final List<String> fileNames = new ArrayList<>();
     private int currentImageIndex = 0;
     private Slideshow ss;
     private Runnable task;
@@ -42,6 +44,9 @@ public class FXMLDocumentController implements Initializable
 
     @FXML
     private ImageView imageView;
+    @FXML
+    private Label ImageName;
+    
 
     private void handleBtnLoadAction(ActionEvent event)
     {
@@ -55,6 +60,7 @@ public class FXMLDocumentController implements Initializable
         {
             files.forEach((File f) ->
             {
+                fileNames.add(f.getName());
                 images.add(new Image(f.toURI().toString()));
             });
             displayImage();
@@ -85,6 +91,8 @@ public class FXMLDocumentController implements Initializable
         if (!images.isEmpty())
         {
             imageView.setImage(images.get(currentImageIndex));
+            ImageName.setText("Image Name: " + fileNames.get(currentImageIndex));
+
         }
     }
 
@@ -106,7 +114,7 @@ public class FXMLDocumentController implements Initializable
             handleBtnNextAction(event);
         });
         
-        ss = new Slideshow(images, imageView);
+        ss = new Slideshow(images, imageView, ImageName, fileNames);
         task = ss;
         
     }
