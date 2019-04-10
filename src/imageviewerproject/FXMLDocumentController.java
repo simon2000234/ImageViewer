@@ -129,22 +129,24 @@ public class FXMLDocumentController implements Initializable
     @FXML
     private void handleStopSlideshow(ActionEvent event)
     {
-        try
-        {
-            executor.shutdown();
-            executor.awaitTermination(3, TimeUnit.SECONDS);
-        }
-        catch (InterruptedException ex)
-        {
-            System.out.println("The Thread has stoped");
-        }
-        finally
-        {
-            if (!executor.isTerminated())
-            {
-                executor.shutdownNow();
-            }
-        }
+        
+        sch.stopSlideshow();
+//        try
+//        {
+//            executor.shutdown();
+//            executor.awaitTermination(3, TimeUnit.SECONDS);
+//        }
+//        catch (InterruptedException ex)
+//        {
+//            System.out.println("The Thread has stoped");
+//        }
+//        finally
+//        {
+//            if (!executor.isTerminated())
+//            {
+//                executor.shutdownNow();
+//            }
+//        }
     }
 
 }

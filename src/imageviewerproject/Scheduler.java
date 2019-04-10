@@ -66,5 +66,10 @@ public class Scheduler implements Runnable
             System.out.println("Something went wrong at addSlideshow");
         }
     }
+    
+    public void stopSlideshow()
+    {
+        currentSlideshow.stop();
+    }
 
 }

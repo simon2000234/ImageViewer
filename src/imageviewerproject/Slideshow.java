@@ -74,15 +74,18 @@ public class Slideshow implements Runnable
         {
             executor.shutdown();
             executor.awaitTermination(3, TimeUnit.SECONDS);
-           
-        } catch (InterruptedException ex)
+
+        }
+        catch (InterruptedException ex)
         {
             System.out.println("the thread has stopped");
         }
-        finally{
-        if(!executor.isTerminated()){
-        executor.shutdownNow();
-        }
+        finally
+        {
+            if (!executor.isTerminated())
+            {
+                executor.shutdownNow();
+            }
         }
     }
 }
