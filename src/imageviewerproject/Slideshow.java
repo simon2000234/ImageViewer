@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -68,6 +70,19 @@ public class Slideshow implements Runnable
 
     public synchronized void stop()
     {
+        try
+        {
+            executor.shutdown();
+            executor.awaitTermination(3, TimeUnit.SECONDS);
+           
+        } catch (InterruptedException ex)
+        {
+            System.out.println("the thread has stopped");
+        }
+        finally{
+        if(!executor.isTerminated()){
         executor.shutdownNow();
+        }
+        }
     }
 }
