@@ -8,7 +8,6 @@ import java.util.ResourceBundle;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -23,12 +22,11 @@ import javafx.stage.Stage;
 
 public class FXMLDocumentController implements Initializable
 {
-    private final List<Image> images = new ArrayList<>();
-    private final List<String> fileNames = new ArrayList<>();
+
     private int currentImageIndex = 0;
-    private Slideshow ss;
     private Runnable task;
     private ExecutorService executor;
+    private Scheduler sch;
 
     @FXML
     Parent root;
@@ -46,16 +44,17 @@ public class FXMLDocumentController implements Initializable
     private ImageView imageView;
     @FXML
     private Label ImageName;
-    
 
     private void handleBtnLoadAction(ActionEvent event)
     {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Select image files");
-        fileChooser.getExtensionFilters().add(new ExtensionFilter("Images", 
-            "*.png", "*.jpg", "*.gif", "*.tif", "*.bmp"));        
+        fileChooser.getExtensionFilters().add(new ExtensionFilter("Images",
+                "*.png", "*.jpg", "*.gif", "*.tif", "*.bmp"));
         List<File> files = fileChooser.showOpenMultipleDialog(new Stage());
-                
+        List<Image> images = new ArrayList<>();
+        List<String> fileNames = new ArrayList<>();
+
         if (!files.isEmpty())
         {
             files.forEach((File f) ->
@@ -63,30 +62,32 @@ public class FXMLDocumentController implements Initializable
                 fileNames.add(f.getName());
                 images.add(new Image(f.toURI().toString()));
             });
-            displayImage();
         }
+        Slideshow ss = new Slideshow(images, imageView, ImageName, fileNames);
+        sch.addSlideshow(ss);
+
     }
 
-    private void handleBtnPreviousAction(ActionEvent event)
-    {
-        if (!images.isEmpty())
-        {
-            currentImageIndex = 
-                    (currentImageIndex - 1 + images.size()) % images.size();
-            displayImage();
-        }
-    }
+//    private void handleBtnPreviousAction(ActionEvent event)
+//    {
+//        if (!images.isEmpty())
+//        {
+//            currentImageIndex
+//                    = (currentImageIndex - 1 + images.size()) % images.size();
+//            displayImage();
+//        }
+//    }
+//
+//    private void handleBtnNextAction(ActionEvent event)
+//    {
+//        if (!images.isEmpty())
+//        {
+//            currentImageIndex = (currentImageIndex + 1) % images.size();
+//            displayImage();
+//        }
+//    }
 
-    private void handleBtnNextAction(ActionEvent event)
-    {
-        if (!images.isEmpty())
-        {
-            currentImageIndex = (currentImageIndex + 1) % images.size();
-            displayImage();
-        }
-    }
-
-    private void displayImage()
+    private void displayImage(List<Image> images, List<String> fileNames)
     {
         if (!images.isEmpty())
         {
@@ -104,19 +105,18 @@ public class FXMLDocumentController implements Initializable
             handleBtnLoadAction(event);
         });
 
-        btnPrevious.setOnAction((ActionEvent event) ->
-        {
-            handleBtnPreviousAction(event);
-        });
-        
-        btnNext.setOnAction((ActionEvent event) ->
-        {
-            handleBtnNextAction(event);
-        });
-        
-        ss = new Slideshow(images, imageView, ImageName, fileNames);
-        task = ss;
-        
+//        btnPrevious.setOnAction((ActionEvent event) ->
+//        {
+//            handleBtnPreviousAction(event);
+//        });
+//
+//        btnNext.setOnAction((ActionEvent event) ->
+//        {
+//            handleBtnNextAction(event);
+//        });
+        sch = new Scheduler();
+        task = sch;
+
     }
 
     @FXML
@@ -129,15 +129,19 @@ public class FXMLDocumentController implements Initializable
     @FXML
     private void handleStopSlideshow(ActionEvent event)
     {
-        try {
+        try
+        {
             executor.shutdown();
             executor.awaitTermination(3, TimeUnit.SECONDS);
         }
-        catch (InterruptedException ex){
+        catch (InterruptedException ex)
+        {
             System.out.println("The Thread has stoped");
         }
-        finally {
-            if (!executor.isTerminated()){
+        finally
+        {
+            if (!executor.isTerminated())
+            {
                 executor.shutdownNow();
             }
         }
